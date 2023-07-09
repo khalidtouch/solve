@@ -91,7 +91,7 @@ fun CalculatorScreen(
             ) {
                 CalculatorButton(
                     symbol = "AC",
-                    color = Color.LightGray,
+                    color = Color.Magenta.copy(0.2f),
                     modifier = Modifier
                         .aspectRatio(2f)
                         .weight(2f)
@@ -101,7 +101,7 @@ fun CalculatorScreen(
 
                 CalculatorButton(
                     symbol = "Del",
-                    color = Color.LightGray,
+                    color = Color.Magenta.copy(0.2f),
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
@@ -112,7 +112,7 @@ fun CalculatorScreen(
 
                 CalculatorButton(
                     symbol = "/",
-                    color = Color.LightGray,
+                    color = Color.Cyan.copy(0.2f),
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
@@ -160,7 +160,7 @@ fun CalculatorScreen(
 
                 CalculatorButton(
                     symbol = "X",
-                    color = Color.Cyan,
+                    color = Color.Cyan.copy(0.2f),
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
@@ -209,7 +209,7 @@ fun CalculatorScreen(
 
                 CalculatorButton(
                     symbol = "-",
-                    color = Color.Cyan,
+                    color = Color.Cyan.copy(0.2f),
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
@@ -256,7 +256,7 @@ fun CalculatorScreen(
 
                 CalculatorButton(
                     symbol = "+",
-                    color = Color.Cyan,
+                    color = Color.Cyan.copy(0.2f),
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
@@ -294,7 +294,7 @@ fun CalculatorScreen(
 
                 CalculatorButton(
                     symbol = "=",
-                    color = Color.Gray.copy(0.5f),
+                    color = Color.Cyan.copy(0.2f),
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
