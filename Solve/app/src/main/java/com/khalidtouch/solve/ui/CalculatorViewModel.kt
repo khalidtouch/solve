@@ -59,12 +59,30 @@ class CalculatorViewModel : ViewModel(), EventHandler {
 
     private fun enterDecimal() {
         if (state.op == null) {
-            if (state.number1.contains(".") || state.number1.isBlank()) return
-            state = state.copy(number1 = state.number1 + ".")
+            if (state.number1.contains(".")) return
+            state = when {
+                state.number1.isBlank() -> {
+                    state.copy(number1 = state.number1 + "0.")
+                }
+
+                else -> {
+                    state.copy(number1 = state.number1 + ".")
+                }
+            }
+
             return
         }
-        if (state.number2.contains(".") || state.number2.isBlank()) return
-        state = state.copy(number2 = state.number2 + ".")
+
+        if (state.number2.contains(".")) return
+        state = when {
+            state.number2.isBlank() -> {
+                state.copy(number2 = state.number2 + "0.")
+            }
+
+            else -> {
+                state.copy(number2 = state.number2 + ".")
+            }
+        }
     }
 
 
@@ -85,14 +103,14 @@ class CalculatorViewModel : ViewModel(), EventHandler {
     }
 
     override fun onEvent(event: UiEvent) {
-       when(event) {
-           is UiEvent.Number -> enterNumber(event.number)
-           is UiEvent.Delete -> delete()
-           is UiEvent.Clear -> state = CalculatorState()
-           is UiEvent.Op -> enterOperation(event.operation)
-           is UiEvent.Decimal -> enterDecimal()
-           is UiEvent.Calculate -> calculate()
-       }
+        when (event) {
+            is UiEvent.Number -> enterNumber(event.number)
+            is UiEvent.Delete -> delete()
+            is UiEvent.Clear -> state = CalculatorState()
+            is UiEvent.Op -> enterOperation(event.operation)
+            is UiEvent.Decimal -> enterDecimal()
+            is UiEvent.Calculate -> calculate()
+        }
     }
 }
 
