@@ -91,7 +91,7 @@ class CalculatorViewModelTest {
 
 
     @Test
-    fun enterDecimal_whenNoOpAndNumber1IsBlank_ignoreDecimal() {
+    fun enterDecimal_whenNoOpAndNumber1IsBlank_appendZeroAndDecimal() {
         viewModel.onEvent(UiEvent.Decimal)
         assertEquals("0.", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
