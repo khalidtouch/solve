@@ -1,6 +1,7 @@
 package com.khalidtouch.solve
 
 import com.khalidtouch.solve.domain.Operation
+import com.khalidtouch.solve.domain.UiEvent
 import com.khalidtouch.solve.ui.CalculatorViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -17,43 +18,73 @@ class CalculatorViewModelTest {
 
     @Test
     fun enterNumber_whenLengthOfNumberTooLong_doesNothing() {
-        viewModel.enterNumber(23344445)
-        viewModel.enterNumber(4242)
+        viewModel.onEvent(UiEvent.Number(23344445))
+        viewModel.onEvent(UiEvent.Number(4242))
         assertEquals("23344445", viewModel.state.number1)
         assertNotEquals("4242", viewModel.state.number2)
+
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        viewModel.onEvent(UiEvent.Number(12345678))
+        viewModel.onEvent(UiEvent.Number(3423))
+
+        assertEquals("12345678", viewModel.state.number2)
     }
 
     @Test
     fun enterNumber_whenNoOperation_updateNumber1State() {
-        viewModel.enterNumber(34)
+        viewModel.onEvent(UiEvent.Number(34))
         assertEquals("34", viewModel.state.number1)
+        assertEquals("", viewModel.state.number2)
+
+        viewModel.onEvent(UiEvent.Number(68))
+        assertEquals("3468", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
     }
 
     @Test
+    fun enterOperation_whenOpEnteredAndNumber1IsBlank_opIsNull() {
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        assertEquals(null, viewModel.state.op)
+        assertEquals("", viewModel.state.number1)
+    }
+
+    @Test
+    fun enterOperation_whenOpEnteredAndNumber1IsNotBlank_updateOp() {
+        viewModel.onEvent(UiEvent.Number(458))
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+
+        assertEquals(Operation.Add, viewModel.state.op)
+        assertEquals("458", viewModel.state.number1)
+    }
+
+    @Test
     fun enterNumber_whenOperation_updateNumber2State() {
-        viewModel.enterNumber(12)
-        viewModel.enterOperation(Operation.Add)
-        viewModel.enterNumber(23)
+        viewModel.onEvent(UiEvent.Number(12))
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        viewModel.onEvent(UiEvent.Number(23))
         assertEquals("12", viewModel.state.number1)
         assertEquals("23", viewModel.state.number2)
+
+        viewModel.onEvent(UiEvent.Number(900))
+        assertEquals("12", viewModel.state.number1)
+        assertEquals("23900", viewModel.state.number2)
     }
 
 
     @Test
     fun enterDecimal_whenNoOpAndNumber1HasNoDecimal_addDecimal() {
-        viewModel.enterNumber(23)
-        viewModel.enterDecimal()
+        viewModel.onEvent(UiEvent.Number(23))
+        viewModel.onEvent(UiEvent.Decimal)
         assertEquals("23.", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
     }
 
     @Test
     fun enterDecimal_whenNoOpAndNumber1HasDecimal_ignoreDecimal() {
-        viewModel.enterNumber(46)
-        viewModel.enterDecimal()
-        viewModel.enterNumber(3)
-        viewModel.enterDecimal()
+        viewModel.onEvent(UiEvent.Number(46))
+        viewModel.onEvent(UiEvent.Decimal)
+        viewModel.onEvent(UiEvent.Number(3))
+        viewModel.onEvent(UiEvent.Decimal)
         assertEquals("46.3", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
     }
@@ -61,54 +92,54 @@ class CalculatorViewModelTest {
 
     @Test
     fun enterDecimal_whenNoOpAndNumber1IsBlank_ignoreDecimal() {
-        viewModel.enterDecimal()
+        viewModel.onEvent(UiEvent.Decimal)
         assertEquals("", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
     }
 
     @Test
     fun enterDecimal_whenOpAndNumber2HasNoDecimal_addDecimal() {
-        viewModel.enterNumber(23)
-        viewModel.enterOperation(Operation.Subtract)
-        viewModel.enterNumber(34)
-        viewModel.enterDecimal()
+        viewModel.onEvent(UiEvent.Number(23))
+        viewModel.onEvent(UiEvent.Op(Operation.Subtract))
+        viewModel.onEvent(UiEvent.Number(34))
+        viewModel.onEvent(UiEvent.Decimal)
         assertEquals("23", viewModel.state.number1)
         assertEquals("34.", viewModel.state.number2)
     }
 
     @Test
     fun enterDecimal_whenOpAndNumber2HasDecimal_ignoreDecimal() {
-        viewModel.enterNumber(90)
-        viewModel.enterOperation(Operation.Divide)
-        viewModel.enterNumber(12)
-        viewModel.enterDecimal()
-        viewModel.enterNumber(6)
-        viewModel.enterDecimal()
+        viewModel.onEvent(UiEvent.Number(90))
+        viewModel.onEvent(UiEvent.Op(Operation.Divide))
+        viewModel.onEvent(UiEvent.Number(12))
+        viewModel.onEvent(UiEvent.Decimal)
+        viewModel.onEvent(UiEvent.Number(6))
+        viewModel.onEvent(UiEvent.Decimal)
         assertEquals("90", viewModel.state.number1)
         assertEquals("12.6", viewModel.state.number2)
     }
 
     @Test
     fun enterDecimal_whenOpAndNumber2IsBlank_ignoreDecimal() {
-        viewModel.enterNumber(90)
-        viewModel.enterOperation(Operation.Divide)
-        viewModel.enterDecimal()
+        viewModel.onEvent(UiEvent.Number(90))
+        viewModel.onEvent(UiEvent.Op(Operation.Divide))
+        viewModel.onEvent(UiEvent.Decimal)
         assertEquals("90", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
     }
 
     @Test
     fun calculate_whenNumber1Blank_doNothing() {
-        viewModel.calculate()
+        viewModel.onEvent(UiEvent.Calculate)
         assertEquals("", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
     }
 
     @Test
     fun calculate_whenNumber2Blank_doNothing() {
-        viewModel.enterNumber(45)
-        viewModel.enterOperation(Operation.Add)
-        viewModel.calculate()
+        viewModel.onEvent(UiEvent.Number(45))
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        viewModel.onEvent(UiEvent.Calculate)
         assertEquals("45", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
         assertEquals(Operation.Add, viewModel.state.op)
@@ -116,10 +147,10 @@ class CalculatorViewModelTest {
 
     @Test
     fun calculate_whenNumber1AndNumber2ValidAndOpAdd_performAddition() {
-        viewModel.enterNumber(5)
-        viewModel.enterOperation(Operation.Add)
-        viewModel.enterNumber(6)
-        viewModel.calculate()
+        viewModel.onEvent(UiEvent.Number(5))
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        viewModel.onEvent(UiEvent.Number(6))
+        viewModel.onEvent(UiEvent.Calculate)
         assertEquals("11.0", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
         assertEquals(null, viewModel.state.op)
@@ -127,10 +158,10 @@ class CalculatorViewModelTest {
 
     @Test
     fun calculate_whenNumber1AndNumber2ValidAndOpSubtract_performSubtraction() {
-        viewModel.enterNumber(7)
-        viewModel.enterOperation(Operation.Subtract)
-        viewModel.enterNumber(6)
-        viewModel.calculate()
+        viewModel.onEvent(UiEvent.Number(7))
+        viewModel.onEvent(UiEvent.Op(Operation.Subtract))
+        viewModel.onEvent(UiEvent.Number(6))
+        viewModel.onEvent(UiEvent.Calculate)
         assertEquals("1.0", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
         assertEquals(null, viewModel.state.op)
@@ -138,10 +169,10 @@ class CalculatorViewModelTest {
 
     @Test
     fun calculate_whenNumber1AndNumber2ValidAndOpDivide_performDivision() {
-        viewModel.enterNumber(25)
-        viewModel.enterOperation(Operation.Divide)
-        viewModel.enterNumber(5)
-        viewModel.calculate()
+        viewModel.onEvent(UiEvent.Number(25))
+        viewModel.onEvent(UiEvent.Op(Operation.Divide))
+        viewModel.onEvent(UiEvent.Number(5))
+        viewModel.onEvent(UiEvent.Calculate)
         assertEquals("5.0", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
         assertEquals(null, viewModel.state.op)
@@ -149,10 +180,10 @@ class CalculatorViewModelTest {
 
     @Test
     fun calculate_whenNumber1AndNumber2ValidAndOpTimes_performMultiplication() {
-        viewModel.enterNumber(5)
-        viewModel.enterOperation(Operation.Multiply)
-        viewModel.enterNumber(6)
-        viewModel.calculate()
+        viewModel.onEvent(UiEvent.Number(5))
+        viewModel.onEvent(UiEvent.Op(Operation.Multiply))
+        viewModel.onEvent(UiEvent.Number(6))
+        viewModel.onEvent(UiEvent.Calculate)
         assertEquals("30.0", viewModel.state.number1)
         assertEquals("", viewModel.state.number2)
         assertEquals(null, viewModel.state.op)
@@ -160,10 +191,10 @@ class CalculatorViewModelTest {
 
     @Test
     fun delete_whenNumber2IsNotBlank_performDelete() {
-        viewModel.enterNumber(12)
-        viewModel.enterOperation(Operation.Add)
-        viewModel.enterNumber(67)
-        viewModel.delete()
+        viewModel.onEvent(UiEvent.Number(12))
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        viewModel.onEvent(UiEvent.Number(67))
+        viewModel.onEvent(UiEvent.Delete)
         assertEquals("12", viewModel.state.number1)
         assertEquals(Operation.Add, viewModel.state.op)
         assertEquals("6", viewModel.state.number2)
@@ -171,9 +202,9 @@ class CalculatorViewModelTest {
 
     @Test
     fun delete_whenOp_performDelete() {
-        viewModel.enterNumber(12)
-        viewModel.enterOperation(Operation.Add)
-        viewModel.delete()
+        viewModel.onEvent(UiEvent.Number(12))
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        viewModel.onEvent(UiEvent.Delete)
         assertEquals("12", viewModel.state.number1)
         assertEquals(null, viewModel.state.op)
         assertEquals("", viewModel.state.number2)
@@ -181,8 +212,8 @@ class CalculatorViewModelTest {
 
     @Test
     fun delete_whenNumber1IsNotBlank_performDelete() {
-        viewModel.enterNumber(45)
-        viewModel.delete()
+        viewModel.onEvent(UiEvent.Number(45))
+        viewModel.onEvent(UiEvent.Delete)
         assertEquals("4", viewModel.state.number1)
         assertEquals(null, viewModel.state.op)
         assertEquals("", viewModel.state.number2)

@@ -23,10 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.khalidtouch.solve.domain.Action
+import com.khalidtouch.solve.domain.UiEvent
 import com.khalidtouch.solve.domain.Operation
 import com.khalidtouch.solve.ui.CalculatorViewModel
 import com.khalidtouch.solve.ui.components.CalculatorButton
@@ -96,7 +95,7 @@ fun CalculatorScreen(
                         .aspectRatio(2f)
                         .weight(2f)
                         .testTag("button:ac"),
-                    onClick = { viewModel.onAction(Action.Clear) }
+                    onClick = { viewModel.onEvent(UiEvent.Clear) }
                 )
 
                 CalculatorButton(
@@ -106,7 +105,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:del"),
-                    onClick = { viewModel.onAction(Action.Delete) }
+                    onClick = { viewModel.onEvent(UiEvent.Delete) }
                 )
 
 
@@ -117,7 +116,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:divide"),
-                    onClick = { viewModel.onAction(Action.Op(Operation.Divide)) }
+                    onClick = { viewModel.onEvent(UiEvent.Op(Operation.Divide)) }
                 )
             }
 
@@ -134,7 +133,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:seven"),
-                    onClick = { viewModel.onAction(Action.Number(7)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(7)) }
                 )
 
                 CalculatorButton(
@@ -144,7 +143,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:eight"),
-                    onClick = { viewModel.onAction(Action.Number(8)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(8)) }
                 )
 
 
@@ -155,7 +154,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:nine"),
-                    onClick = { viewModel.onAction(Action.Number(9)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(9)) }
                 )
 
                 CalculatorButton(
@@ -165,7 +164,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:times"),
-                    onClick = { viewModel.onAction(Action.Op(Operation.Multiply)) }
+                    onClick = { viewModel.onEvent(UiEvent.Op(Operation.Multiply)) }
                 )
 
             }
@@ -183,7 +182,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:four"),
-                    onClick = { viewModel.onAction(Action.Number(4)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(4)) }
                 )
 
                 CalculatorButton(
@@ -193,7 +192,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:five"),
-                    onClick = { viewModel.onAction(Action.Number(5)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(5)) }
                 )
 
 
@@ -204,7 +203,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:six"),
-                    onClick = { viewModel.onAction(Action.Number(6)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(6)) }
                 )
 
                 CalculatorButton(
@@ -214,7 +213,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:minus"),
-                    onClick = { viewModel.onAction(Action.Op(Operation.Subtract)) }
+                    onClick = { viewModel.onEvent(UiEvent.Op(Operation.Subtract)) }
                 )
             }
 
@@ -230,7 +229,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:one"),
-                    onClick = { viewModel.onAction(Action.Number(1)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(1)) }
                 )
 
                 CalculatorButton(
@@ -240,7 +239,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:two"),
-                    onClick = { viewModel.onAction(Action.Number(2)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(2)) }
                 )
 
 
@@ -251,7 +250,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:three"),
-                    onClick = { viewModel.onAction(Action.Number(3)) }
+                    onClick = { viewModel.onEvent(UiEvent.Number(3)) }
                 )
 
                 CalculatorButton(
@@ -261,7 +260,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:plus"),
-                    onClick = { viewModel.onAction(Action.Op(Operation.Add)) }
+                    onClick = { viewModel.onEvent(UiEvent.Op(Operation.Add)) }
                 )
             }
 
@@ -278,7 +277,7 @@ fun CalculatorScreen(
                         .aspectRatio(2f)
                         .weight(2f)
                         .testTag("button:zero"),
-                    onClick = {viewModel.onAction(Action.Number(0))}
+                    onClick = {viewModel.onEvent(UiEvent.Number(0))}
                 )
 
                 CalculatorButton(
@@ -288,7 +287,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:decimal"),
-                    onClick = {viewModel.onAction(Action.Decimal)}
+                    onClick = {viewModel.onEvent(UiEvent.Decimal)}
                 )
 
 
@@ -299,7 +298,7 @@ fun CalculatorScreen(
                         .aspectRatio(1f)
                         .weight(1f)
                         .testTag("button:equals"),
-                    onClick = {viewModel.onAction(Action.Calculate)}
+                    onClick = {viewModel.onEvent(UiEvent.Calculate)}
                 )
             }
         }

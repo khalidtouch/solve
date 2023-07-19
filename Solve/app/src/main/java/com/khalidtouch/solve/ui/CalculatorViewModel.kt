@@ -4,11 +4,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.khalidtouch.solve.domain.Action
-import com.khalidtouch.solve.domain.OnChangeState
+import com.khalidtouch.solve.domain.UiEvent
+import com.khalidtouch.solve.domain.EventHandler
 import com.khalidtouch.solve.domain.Operation
 
-class CalculatorViewModel : ViewModel(), OnChangeState {
+class CalculatorViewModel : ViewModel(), EventHandler {
 
     var state by mutableStateOf(CalculatorState())
 
@@ -16,12 +16,12 @@ class CalculatorViewModel : ViewModel(), OnChangeState {
         private const val MAX_NUM_LENGTH = 8
     }
 
-    override fun enterOperation(op: Operation) {
+    private fun enterOperation(op: Operation) {
         if (state.number1.isBlank()) return
         state = state.copy(op = op)
     }
 
-    override fun calculate() {
+    private fun calculate() {
         val number1 = state.number1.toDoubleOrNull()
         val number2 = state.number2.toDoubleOrNull()
         if (number1 == null || number2 == null) return
@@ -41,7 +41,7 @@ class CalculatorViewModel : ViewModel(), OnChangeState {
         )
     }
 
-    override fun delete() {
+    private fun delete() {
         when {
             state.number2.isNotBlank() -> state = state.copy(
                 number2 = state.number2.dropLast(1)
@@ -57,7 +57,7 @@ class CalculatorViewModel : ViewModel(), OnChangeState {
         }
     }
 
-    override fun enterDecimal() {
+    private fun enterDecimal() {
         if (state.op == null) {
             if (state.number1.contains(".") || state.number1.isBlank()) return
             state = state.copy(number1 = state.number1 + ".")
@@ -68,7 +68,7 @@ class CalculatorViewModel : ViewModel(), OnChangeState {
     }
 
 
-    override fun enterNumber(number: Int) {
+    private fun enterNumber(number: Int) {
         if (state.op == null) {
             if (state.number1.length >= MAX_NUM_LENGTH) return
             state = state.copy(
@@ -84,14 +84,14 @@ class CalculatorViewModel : ViewModel(), OnChangeState {
 
     }
 
-    override fun onAction(action: Action) {
-       when(action) {
-           is Action.Number -> enterNumber(action.number)
-           is Action.Delete -> delete()
-           is Action.Clear -> state = CalculatorState()
-           is Action.Op -> enterOperation(action.operation)
-           is Action.Decimal -> enterDecimal()
-           is Action.Calculate -> calculate()
+    override fun onEvent(event: UiEvent) {
+       when(event) {
+           is UiEvent.Number -> enterNumber(event.number)
+           is UiEvent.Delete -> delete()
+           is UiEvent.Clear -> state = CalculatorState()
+           is UiEvent.Op -> enterOperation(event.operation)
+           is UiEvent.Decimal -> enterDecimal()
+           is UiEvent.Calculate -> calculate()
        }
     }
 }
