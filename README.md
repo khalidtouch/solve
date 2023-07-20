@@ -14,6 +14,6 @@ This app can be downloaded and installed from [Solve](https://drive.google.com/f
 ![image](res/WhatsApp%20Image%202023-07-20%20at%2010.01.58%20AM.jpeg)
 ![video](res/shot.gif)
 
-    <video src="/res/shot.gif" width=180/>
+    <video src="res/shot.gif" width=180/>
 
 </p>
