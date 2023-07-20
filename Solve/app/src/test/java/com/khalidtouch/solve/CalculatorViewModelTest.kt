@@ -58,6 +58,33 @@ class CalculatorViewModelTest {
     }
 
     @Test
+    fun enterOperation_whenOpEnteredAndNumber2IsNotBlank_calculateThenUpdateOp() {
+        viewModel.onEvent(UiEvent.Number(23))
+        viewModel.onEvent(UiEvent.Op(Operation.Add))
+        viewModel.onEvent(UiEvent.Number(10))
+        viewModel.onEvent(UiEvent.Op(Operation.Subtract))
+
+        assertEquals("33.0", viewModel.state.number1)
+        assertEquals(Operation.Subtract, viewModel.state.op)
+        assertEquals("", viewModel.state.number2)
+
+        viewModel.onEvent(UiEvent.Number(20))
+        assertEquals("20", viewModel.state.number2)
+
+        viewModel.onEvent(UiEvent.Op(Operation.Multiply))
+        viewModel.onEvent(UiEvent.Number(2))
+
+        assertEquals("13.0", viewModel.state.number1)
+        assertEquals(Operation.Multiply, viewModel.state.op)
+        assertEquals("2", viewModel.state.number2)
+
+        viewModel.onEvent(UiEvent.Calculate)
+        assertEquals("26.0", viewModel.state.number1)
+        assertEquals("", viewModel.state.number2)
+
+    }
+
+    @Test
     fun enterNumber_whenOperation_updateNumber2State() {
         viewModel.onEvent(UiEvent.Number(12))
         viewModel.onEvent(UiEvent.Op(Operation.Add))

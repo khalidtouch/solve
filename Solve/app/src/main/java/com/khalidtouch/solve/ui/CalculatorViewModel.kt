@@ -18,6 +18,11 @@ class CalculatorViewModel : ViewModel(), EventHandler {
 
     private fun enterOperation(op: Operation) {
         if (state.number1.isBlank()) return
+        if (state.number2.isBlank()) {
+            state = state.copy(op = op)
+            return
+        }
+        calculate()
         state = state.copy(op = op)
     }
 
